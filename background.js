@@ -21,6 +21,19 @@
         }
     });
 
+    function regexCheck(dict, domain)
+    {
+        let result = false;
+        Object.keys(dict).forEach(key => 
+        {
+            const str = key.replaceAll('.', '\\.').replaceAll('*', '.*');
+            const regex = new RegExp(str);
+            if(regex.test(domain)) 
+                result = true;
+        });
+        return result;
+    }
+
     chrome.webRequest.onHeadersReceived.addListener(function (details)
     {
         if (details.type == 'main_frame')
@@ -81,7 +94,7 @@
             if (!requestDomain.includes(baseDomain))
             {
                 var allowed = false;
-                if (allowedMap[baseDomain] != null && allowedMap[baseDomain][requestDomain] == true)
+                if (allowedMap[baseDomain] != null && (allowedMap[baseDomain][requestDomain] == true || regexCheck(allowedMap[baseDomain], requestDomain)))
                 {
                     allowed = true;
                 }

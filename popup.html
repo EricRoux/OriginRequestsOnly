@@ -55,6 +55,17 @@
         .title {
             font-size: 16px;
         }
+
+        .new_row {
+            display: flex;
+            margin: 2px;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .new_row_input {
+            width: 80%;
+        }
     </style>
 
     <script type="text/javascript" src="lib/jquery-1.11.1.min.js"></script>
@@ -103,6 +114,11 @@
                 <label for="allow"></label></td>
         </tr>
     </table>
+    <div class="new_row">
+        <input class="new_row_input" type="text">
+        <button class="new_row_button_add" type="submit">Push</button>
+        <button class="new_row_button_delete" type="submit">Delete</button>
+    </div>
 
 </div>
 

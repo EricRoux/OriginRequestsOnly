@@ -138,3 +138,69 @@ helloApp.controller("CompanyCtrl", function ($scope)
         $scope.selector = '';
     };
 });
+
+document.querySelector('.new_row_button_add').addEventListener("click", newLine);
+document.querySelector('.new_row_button_delete').addEventListener("click", deleteLine);
+
+function newLine(event)
+{
+    event.preventDefault();
+    chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT}, 
+        function(tabs)
+        {
+            const tabUrl = new URL(tabs[0].url);
+            const domain = document.querySelector('.new_row_input').value;
+            addDomain(tabUrl.hostname, domain);
+        }
+    );
+}
+
+function deleteLine(event)
+{
+    event.preventDefault();
+    chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT}, 
+        function(tabs)
+        {
+            const tabUrl = new URL(tabs[0].url);
+            const domain = document.querySelector('.new_row_input').value;
+            deleteDomain(tabUrl.hostname, domain);
+        }
+    );
+}
+
+function addDomain(site, domain)
+{
+    let allowedMap;
+    chrome.storage.sync.get("allowedMap", function(result) 
+    {
+        if (result == null || result.allowedMap == null)
+        {
+            allowedMap = {};
+        }
+        else
+        {
+            allowedMap = result.allowedMap;
+            console.log("allowedMap: ", allowedMap);
+        }
+        allowedMap[site][domain] = true;
+        chrome.storage.sync.set({allowedMap});
+    });
+}
+
+function deleteDomain(site, domain){
+    let allowedMap;
+    chrome.storage.sync.get("allowedMap", function(result) 
+    {
+        if (result == null || result.allowedMap == null)
+        {
+            allowedMap = {};
+        }
+        else
+        {
+            allowedMap = result.allowedMap;
+            console.log("allowedMap: ", allowedMap);
+        }
+        delete allowedMap[site][domain];
+        chrome.storage.sync.set({allowedMap: allowedMap});
+    });
+}
